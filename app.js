@@ -105,10 +105,10 @@ function getLifeCount(x,y) {
   var counter = 0
   for(i=x-1; i <= x+1; i++){
     for(j=y-1; j<=y+1; j++){
-      if ((i == x && j == y) || (i < 0) || (j < 0) || (i >= N) || (j >= N)){
+      if (i == x && j == y){
         continue;
       }
-      if (area[i][j]){
+      if (area[(i+N)%N][(j+N)%N]){
         ++counter;
       }
     }
