@@ -18,6 +18,9 @@ function initLife(){
 }
 
 function initScreen(){
+  $('#start').click(start);
+  $('#stop').click(stop);
+
     var $table = $('#table');
     for (var i = 0; i < N; i++) {
         row_html = rowTemplate({i: i});
@@ -30,6 +33,20 @@ function initScreen(){
             $row.append(cell_html);
         }
     }
+}
+
+var action;
+
+function start(){
+  action = setInterval(function(){
+    life();
+    render();
+  }, $('#interval').val());
+  console.log($('#interval').val());
+}
+
+function stop(){
+  clearInterval(action);
 }
 
 function render(){
@@ -64,17 +81,25 @@ function life(){
 }
 
 function getLifeCount(x,y) {
+  var counter = 0
   for(i=x-1; i <= x+1; i++){
     for(j=y-1; j<=y+1; j++){
-      if (i == x 
+      if ((i == x && j == y) || (i < 0) || (j < 0) || (i >= N) || (j >= N)){
+        continue;
+      }
+      if (area[i][j]){
+        ++counter;
+      }
     }
   }
+
+  return counter;
 }
 
 $(function (){
   initScreen();
   initLife();
   render();
-  setInterval(life, 700);
+  start();
 });
 
