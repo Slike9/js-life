@@ -9,7 +9,7 @@ function initLife(){
     area[i] = [];
   }
 
-  var center = N / 2;
+  var center = Math.floor(N / 2);
   area[center][center] = true;
   area[center][center + 1] = true;
   area[center][center + 2] = true;
@@ -17,11 +17,9 @@ function initLife(){
   area[center - 2][center + 1] = true;
 }
 
-function initScreen(){
-  $('#start').click(start);
-  $('#stop').click(stop);
-
+function resizeArea(){
     var $table = $('#table');
+    $table.html('');
     for (var i = 0; i < N; i++) {
         row_html = rowTemplate({i: i});
         $table.append(row_html);
@@ -35,18 +33,41 @@ function initScreen(){
     }
 }
 
+function initScreen(){
+  $('#start').click(start);
+  $('#stop').click(stop);
+  $('#N').change(function(){
+    N = $(this).val();
+    resizeArea();
+    initLife();
+  });
+  $('#next').click(next);
+
+  resizeArea();
+
+  $('#table').on('click', 'td', function(){
+    var coord = $(this).attr('id').split('_');
+    var y = coord[0];
+    var x = coord[1];
+    area[y][x] = !area[y][x];
+    render();
+  });
+}
+
 var action;
 
 function start(){
-  action = setInterval(function(){
-    life();
-    render();
-  }, $('#interval').val());
+  action = setInterval(next, $('#interval').val());
   console.log($('#interval').val());
 }
 
 function stop(){
   clearInterval(action);
+}
+
+function next(){
+    life();
+    render();
 }
 
 function render(){
